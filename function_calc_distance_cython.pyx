@@ -11,9 +11,9 @@ def calc_distance_cpython(int natoms,
                           
     cdef int ind, jnd 
     cdef double xi, yi, zi, dx, dy, dz, distance
-    cdef double hlx = 0.5 * lbox[0]
-    cdef double hly = 0.5 * lbox[1]
-    cdef double hlz = 0.5 * lbox[2]
+    cdef double invx = 1.0 / lbox[0]
+    cdef double invy = 1.0 / lbox[1]
+    cdef double invz = 1.0 / lbox[2]
 
     for ind in range(0, natoms - 1):
         xi = r[0, ind]
@@ -25,25 +25,12 @@ def calc_distance_cpython(int natoms,
             dy = yi - r[1, jnd]
             dz = zi - r[2, jnd]
 
-            #dx = dx - lbox[0] * ceil(dx / lbox[0])
-            #dy = dy - lbox[1] * ceil(dy / lbox[1])
-            #dz = dz - lbox[2] * ceil(dz / lbox[2])
 
-            if dx >= hlx:
-                dx = dx - hlx
-            elif dx <= -hlx:
-                dx = dx + hlx
-            
-            if dy >= hly:
-                dy = dy - hly
-            elif dy <= -hly:
-                dy = dy + hly
-
-            if dz >= hlz:
-                dz = dz - hlz
-            elif dz <= -hlz:
-                dz = dz + hlz
+            dx = dx - lbox[0] * ceil(invx * dx)
+            dy = dy - lbox[1] * ceil(invy * dy)
+            dz = dz - lbox[2] * ceil(invz * dz)
 
             distance = sqrt(dx * dx + dy * dy + dz * dz)
-
+            #print(ind, jnd, distance)
+            
     return distance

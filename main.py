@@ -5,7 +5,7 @@ from function_calc_distance_cython import calc_distance_cpython
 
 
 natoms = 10000
-#natoms = 619236
+
 r = np.random.rand(3, natoms)
 lbox = np.array([1.0, 1.0, 1.0])
 
